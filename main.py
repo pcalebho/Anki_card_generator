@@ -7,6 +7,7 @@ from text_to_speech import generate_english, generate_cantonese
 from ankipandas import Collection
 import re
 import datetime
+import click
 
 def check_and_create_directory(path):
     """Checks if a file directory exists and creates it if it does not.
@@ -50,10 +51,7 @@ def sentence_to_filename(sentence):
 
     return filename
 
-
-
-
-if __name__ == '__main__':
+def main():
     anki_media_folder_location = 'C:/Users/ttrol/AppData/Roaming/Anki2/User 1/collection.media'
     deck_name = 'Cantonese Sentences'
     # Open the Google Sheet
@@ -79,6 +77,9 @@ if __name__ == '__main__':
     # check_and_create_directory('build')
     print(df_filtered)
 
+    if not click.confirm('Add notes?'):
+        return
+
     en_filenames = [sentence_to_filename(phrase)+'-en.mp3' for phrase in list(df_filtered['English Phrase'])]
     ch_filenames =  [sentence_to_filename(phrase) + '-ch.mp3' for phrase in list(df_filtered['Jyutping'])]
     chs_filenames =  [sentence_to_filename(phrase) + '-chs.mp3' for phrase in list(df_filtered['Jyutping'])]
@@ -95,7 +96,6 @@ if __name__ == '__main__':
 
     col = Collection('C:/Users/ttrol/AppData/Roaming/Anki2')
 
-    raw_df = col.cards
     notes_df = col.notes
 
     notes_fld = {
@@ -124,6 +124,10 @@ if __name__ == '__main__':
 
     for i in filtered_index:
         worksheet.update_cell(i+2,1,time_string)
+
+
+if __name__ == '__main__':
+   main()
     
 
     
