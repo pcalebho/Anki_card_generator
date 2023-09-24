@@ -3,7 +3,7 @@ import os
 import shutil
 import pandas as pd
 from pathlib import Path
-from text_to_speech import generate_english
+from text_to_speech import generate_english, generate_cantonese
 from ankipandas import Collection
 
 
@@ -20,9 +20,6 @@ def check_and_create_directory(path):
         shutil.rmtree(path)
         os.makedirs(path)
 
-
-def generate_cantonese(canto, filename):
-    pass    
 
 
 if __name__ == '__main__':
