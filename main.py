@@ -6,6 +6,7 @@ from pathlib import Path
 from text_to_speech import generate_english, generate_cantonese
 from ankipandas import Collection
 import re
+import datetime
 
 def check_and_create_directory(path):
     """Checks if a file directory exists and creates it if it does not.
@@ -40,7 +41,7 @@ def sentence_to_filename(sentence):
     # Remove all special characters, except for letters, numbers, and underscores.
     filename = re.sub(r"[^\w_]", "", filename)
 
-    max_length = 254
+    max_length = 249
     if len(filename) > max_length:
         filename = filename[:max_length]
 
@@ -48,6 +49,7 @@ def sentence_to_filename(sentence):
     filename = filename.lower()
 
     return filename
+
 
 
 
@@ -72,16 +74,21 @@ if __name__ == '__main__':
     df_filtered = df_filtered[df_filtered['Exclude'] == '']
 
 
-    check_and_create_directory('build')
+    filtered_index = list(df_filtered.index.values)
+
+    # check_and_create_directory('build')
     print(df_filtered)
 
-    en_filenames = ['build/' + str(i)+'-en.mp4' for i in range(df_filtered.shape[0])]
-    ch_filenames =  ['build/' + str(i)+'-ch.mp4' for i in range(df_filtered.shape[0])]
-    google_voice = [True for i in range(len(en_filenames))]
-      
+    en_filenames = [sentence_to_filename(phrase)+'-en.mp3' for phrase in list(df_filtered['English Phrase'])]
+    ch_filenames =  [sentence_to_filename(phrase) + '-ch.mp3' for phrase in list(df_filtered['Jyutping'])]
+    google_voice = [False for i in range(len(en_filenames))]
+    
+    en_path = [anki_media_folder_location +'/' + f for f in en_filenames]
+    ch_path = [anki_media_folder_location +'/' + f for f in ch_filenames]
+
     #create audio files
-    list(map(generate_english, list(df_filtered['English Phrase']), en_filenames))
-    list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), ch_filenames, google_voice))
+    list(map(generate_english, list(df_filtered['English Phrase']), en_path))
+    list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), ch_path, google_voice))
 
     col = Collection('C:/Users/ttrol/AppData/Roaming/Anki2')
 
@@ -99,7 +106,6 @@ if __name__ == '__main__':
     
     ntags = [row.split() for row in df_filtered['Tags']]
 
-
     added_notes_nid = notes_df.add_notes(
         nmodel='Cantonese Sentences (optional reversed card)',
         nflds=notes_fld,
@@ -108,11 +114,12 @@ if __name__ == '__main__':
         )
     
     col.write(add=True,modify=True)
-    
-    # added_cards = raw_df.add_cards(nid=added_notes_nid,cdeck=deck_name)  #type:ignore
-    # col.write(modify=True)
 
-    # # print(added_notes_nid)
-    # print(added_cards)
+    current_time = datetime.datetime.now()
+    time_string = current_time.strftime("%Y-%m-%d %H:%M:%S")
+
+    for i in filtered_index:
+        worksheet.update_cell(i+2,1,time_string)
+    
 
     
