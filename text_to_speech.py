@@ -13,11 +13,11 @@ if TTS_API_KEY is None:
 
 credentials = service_account.Credentials.from_service_account_file('tts_auth.json')
 
-def generate_cantonese(cantonese, filename, google_tts=False):
+def generate_cantonese(cantonese, filename, voice_speed=1.0, google_tts=True):
     if google_tts is False:
         apikey = TTS_API_KEY
         voice = 'man-chi'
-        url = f'https://api.narakeet.com/text-to-speech/m4a?voice={voice}'
+        url = f'https://api.narakeet.com/text-to-speech/m4a?voice={voice}&voice-speed={voice_speed}'
 
         import requests
 
@@ -46,7 +46,8 @@ def generate_cantonese(cantonese, filename, google_tts=False):
 
         # Select the type of audio file you want returned
         audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.MP3
+            audio_encoding=texttospeech.AudioEncoding.MP3,
+            speaking_rate=voice_speed
         )
 
         # Perform the text-to-speech request on the text input with the selected
@@ -67,5 +68,5 @@ def generate_english(english, filename):
     tts.save(filename)
 
 if __name__ == '__main__':
-    generate_cantonese('抌垃圾 唔該.','build/output3.mp4')
+    generate_cantonese('我帮仓库设计机械人.','build/output3_google.mp3', True)
     # generate_english('Take out the trash, please.', 'english.mp4')

@@ -81,14 +81,17 @@ if __name__ == '__main__':
 
     en_filenames = [sentence_to_filename(phrase)+'-en.mp3' for phrase in list(df_filtered['English Phrase'])]
     ch_filenames =  [sentence_to_filename(phrase) + '-ch.mp3' for phrase in list(df_filtered['Jyutping'])]
-    google_voice = [False for i in range(len(en_filenames))]
+    chs_filenames =  [sentence_to_filename(phrase) + '-chs.mp3' for phrase in list(df_filtered['Jyutping'])]
+
     
     en_path = [anki_media_folder_location +'/' + f for f in en_filenames]
     ch_path = [anki_media_folder_location +'/' + f for f in ch_filenames]
+    chs_path = [anki_media_folder_location +'/' + f for f in chs_filenames]
 
     #create audio files
     list(map(generate_english, list(df_filtered['English Phrase']), en_path))
-    list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), ch_path, google_voice))
+    list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), ch_path))
+    list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), chs_path, [0.5]*len(en_path)))
 
     col = Collection('C:/Users/ttrol/AppData/Roaming/Anki2')
 
@@ -100,6 +103,7 @@ if __name__ == '__main__':
         'English Audio': list(map(filename_to_anki,en_filenames)),
         'Cantonese': list(df_filtered['Cantonese Phrase']),
         'Cantonese Audio': list(map(filename_to_anki,ch_filenames)),
+        'Cantonese Audio Slow': list(map(filename_to_anki,chs_filenames)),
         'Jyutping': list(df_filtered['Jyutping']),
         'Add Reverse': list(df_filtered['Add Reverse'])
         }
