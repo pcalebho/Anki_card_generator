@@ -3,7 +3,9 @@ import os
 import shutil
 import pandas as pd
 from pathlib import Path
-from gtts import gTTS
+from text_to_speech import generate_english
+from ankipandas import Collection
+
 
 def check_and_create_directory(path):
     """Checks if a file directory exists and creates it if it does not.
@@ -19,13 +21,13 @@ def check_and_create_directory(path):
         os.makedirs(path)
 
 
-def generate_english(english, filename):
-    tts = gTTS(english, lang='en', tld='us')
-    tts.save('build/' + filename)
+def generate_cantonese(canto, filename):
+    pass    
 
 
 if __name__ == '__main__':
-   # Open the Google Sheet
+    deck_name = 'Test Deck'
+    # Open the Google Sheet
     gc = gspread.service_account(Path('auth.json'))
     sheet = gc.open_by_key('1ljONb-A-wz0DRU7L4BLK_WrCFn76mbKe19DBbOOWQ0U')
 
@@ -44,8 +46,17 @@ if __name__ == '__main__':
     check_and_create_directory('build')
 
     en_filenames = [str(i)+'-en.mp4' for i in range(df_filtered.shape[0])]
-    print(en_filenames)
-    print(list(df_filtered['English Phrase']))
-    
+      
     #create english files
     list(map(generate_english, list(df_filtered['English Phrase']), en_filenames))
+
+    col = Collection('C:/Users/ttrol/AppData/Roaming/Anki2')
+
+    raw_df = col.cards
+    target_deck = raw_df[raw_df['cdeck'] == 'Test Deck']
+    notes_df = col.notes
+
+    nid_list = list(target_deck['nid'])
+    print(nid_list)
+    target_notes = notes_df[notes_df.index.isin(nid_list)]
+    print(target_notes)

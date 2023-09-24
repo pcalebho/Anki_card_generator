@@ -1,5 +1,6 @@
 #files
 auth.json
+tts_auth.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
