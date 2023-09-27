@@ -105,6 +105,8 @@ def main():
         'Cantonese Audio': list(map(filename_to_anki,ch_filenames)),
         'Cantonese Audio Slow': list(map(filename_to_anki,chs_filenames)),
         'Jyutping': list(df_filtered['Jyutping']),
+        'Notes': list(df_filtered['Notes']),
+        'Front Note': list(df_filtered['Front Note']),
         'Add Reverse': list(df_filtered['Add Reverse'])
         }
     

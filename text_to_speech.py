@@ -68,5 +68,9 @@ def generate_english(english, filename):
     tts.save(filename)
 
 if __name__ == '__main__':
-    generate_cantonese('我帮仓库设计机械人.','build/output3_google.mp3', True)
-    # generate_english('Take out the trash, please.', 'english.mp4')
+    yue = '佢 係 醫生. 佢 好 忙 噶。'
+    en = 'I will find something.'
+
+    generate_cantonese(yue,'build/ch_normal.mp3', voice_speed=1, google_tts=True)
+    generate_cantonese(yue,'build/ch_slow.mp3', voice_speed=0.5, google_tts=True)
+    generate_english('I will find something.', 'build/en.mp3')
