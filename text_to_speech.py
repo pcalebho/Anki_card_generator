@@ -70,9 +70,13 @@ def generate_english(english, filename):
     tts.save(filename)
 
 if __name__ == '__main__':
-    yue = '今日几号?'
-    en = 'I will find something.'
+    import json
+    with open("tts_test_inputs.json", "r") as readfile:
+        inputs = json.load(readfile)
+
+    yue = inputs['yue']
+    en = inputs['en']
 
     generate_cantonese(yue,'build/ch_normal.mp3', voice_speed=1, google_tts=True)
     generate_cantonese(yue,'build/ch_slow.mp3', voice_speed=0.5, google_tts=True)
-    generate_english('I will find something.', 'build/en.mp3')
+    generate_english(en, 'build/en.mp3')
