@@ -1,4 +1,5 @@
 import os
+import re
 from gtts import gTTS
 from dotenv import load_dotenv
 from google.cloud import texttospeech
@@ -14,6 +15,7 @@ if TTS_API_KEY is None:
 credentials = service_account.Credentials.from_service_account_file('tts_auth.json')
 
 def generate_cantonese(cantonese, filename, voice_speed=1.0, google_tts=True):
+    cantonese = re.sub(r'\?','', cantonese)
     if google_tts is False:
         apikey = TTS_API_KEY
         voice = 'man-chi'
@@ -68,7 +70,7 @@ def generate_english(english, filename):
     tts.save(filename)
 
 if __name__ == '__main__':
-    yue = '佢 係 醫生. 佢 好 忙 噶。'
+    yue = '今日几号?'
     en = 'I will find something.'
 
     generate_cantonese(yue,'build/ch_normal.mp3', voice_speed=1, google_tts=True)
