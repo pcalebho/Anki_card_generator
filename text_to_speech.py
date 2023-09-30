@@ -71,8 +71,10 @@ def generate_english(english, filename):
 
 if __name__ == '__main__':
     import json
-    with open("tts_test_inputs.json", "r") as readfile:
+    with open("tts_test_inputs.json", "r",encoding='utf-8') as readfile:
         inputs = json.load(readfile)
+
+    print(inputs)
 
     yue = inputs['yue']
     en = inputs['en']
