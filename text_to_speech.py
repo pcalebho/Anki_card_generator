@@ -4,7 +4,7 @@ from gtts import gTTS
 from google.cloud import texttospeech
 from google.oauth2 import service_account
 
-credentials = service_account.Credentials.from_service_account_file('_auth.json')
+credentials = service_account.Credentials.from_service_account_file('google_auth.json')
 
 def generate_cantonese(cantonese, filename, voice_speed=1.0):
     cantonese = cantonese.replace('?','')
