@@ -55,7 +55,7 @@ def main():
     anki_media_folder_location = 'C:/Users/ttrol/AppData/Roaming/Anki2/User 1/collection.media'
     deck_name = 'Cantonese Sentences'
     # Open the Google Sheet
-    gc = gspread.service_account(Path('auth.json'))
+    gc = gspread.service_account(Path('google_auth.json'))
     sheet = gc.open_by_key('1ljONb-A-wz0DRU7L4BLK_WrCFn76mbKe19DBbOOWQ0U')
 
     # Get the worksheet
@@ -70,7 +70,7 @@ def main():
     df_filtered = df_filtered[df_filtered['English Phrase'] != '']
     df_filtered = df_filtered[df_filtered['Jyutping'] != '']
     df_filtered = df_filtered[df_filtered['Exclude'] == '']
-
+    df_filtered['Cantonese Phrase'] = [" ".join(phrase.split()) for phrase in df_filtered['Cantonese Phrase']] 
 
     filtered_index = list(df_filtered.index.values)
 
@@ -88,6 +88,8 @@ def main():
     en_path = [anki_media_folder_location +'/' + f for f in en_filenames]
     ch_path = [anki_media_folder_location +'/' + f for f in ch_filenames]
     chs_path = [anki_media_folder_location +'/' + f for f in chs_filenames]
+
+   
 
     #create audio files
     list(map(generate_english, list(df_filtered['English Phrase']), en_path))
