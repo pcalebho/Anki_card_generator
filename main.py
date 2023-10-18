@@ -80,6 +80,9 @@ def main():
     if not click.confirm('Add notes?'):
         return
 
+    if not click.confirm('Is Anki closed?'):
+        return
+    
     en_filenames = [sentence_to_filename(phrase)+'-en.mp3' for phrase in list(df_filtered['English Phrase'])]
     ch_filenames =  [sentence_to_filename(phrase) + '-ch.mp3' for phrase in list(df_filtered['Jyutping'])]
     chs_filenames =  [sentence_to_filename(phrase) + '-chs.mp3' for phrase in list(df_filtered['Jyutping'])]
@@ -89,7 +92,6 @@ def main():
     ch_path = [anki_media_folder_location +'/' + f for f in ch_filenames]
     chs_path = [anki_media_folder_location +'/' + f for f in chs_filenames]
 
-   
 
     #create audio files
     list(map(generate_english, list(df_filtered['English Phrase']), en_path))
