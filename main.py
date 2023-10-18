@@ -61,6 +61,9 @@ def main():
     gc = gspread.service_account(Path('google_auth.json'))
     sheet = gc.open_by_key(os.environ.get('GOOGLE_SHEET_KEY'))          #google sheet must be public to view and edit
 
+    if anki_media_folder_location is None:
+        return
+
     # Get the worksheet
     worksheet = sheet.worksheet('Sheet1')
 
