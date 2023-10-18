@@ -8,6 +8,9 @@ from ankipandas import Collection
 import re
 import datetime
 import click
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def check_and_create_directory(path):
     """Checks if a file directory exists and creates it if it does not.
@@ -52,11 +55,11 @@ def sentence_to_filename(sentence):
     return filename
 
 def main():
-    anki_media_folder_location = 'C:/Users/ttrol/AppData/Roaming/Anki2/User 1/collection.media'
-    deck_name = 'Cantonese Sentences'
+    anki_media_folder_location = os.environ.get('ANKI_DB_LOCATION')
+
     # Open the Google Sheet
     gc = gspread.service_account(Path('google_auth.json'))
-    sheet = gc.open_by_key('1ljONb-A-wz0DRU7L4BLK_WrCFn76mbKe19DBbOOWQ0U')
+    sheet = gc.open_by_key(os.environ.get('GOOGLE_SHEET_KEY'))          #google sheet must be public to view and edit
 
     # Get the worksheet
     worksheet = sheet.worksheet('Sheet1')
