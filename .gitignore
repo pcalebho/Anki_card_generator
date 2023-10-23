@@ -1,5 +1,6 @@
 #files
 google_auth.json
+tts_test_inputs.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
