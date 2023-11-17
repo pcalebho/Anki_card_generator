@@ -82,6 +82,7 @@ def main():
 
     # check_and_create_directory('build')
     print(df_filtered)
+    print("Entries Adding: ", df_filtered.shape[0])
 
     if not click.confirm('Add notes?'):
         return
