@@ -69,6 +69,9 @@ def main():
     gc = gspread.service_account(Path('google_auth.json'))
     sheet = gc.open_by_key(GOOGLE_SHEET_KEY)          #google sheet must be public to view and edit
 
+    if anki_media_folder_location is None:
+        return
+
     # Get the worksheet
     worksheet = sheet.worksheet('Sheet1')
 
@@ -110,10 +113,9 @@ def main():
     list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), ch_path))
     list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), chs_path, [0.5]*len(en_path)))
 
+    #Add notes to Anki collection
     col = Collection(ANKI_LOCATION)
-
     notes_df = col.notes
-
     notes_fld = {
         'English': list(df_filtered['English Phrase']),
         'English Audio': list(map(filename_to_anki,en_filenames)),
@@ -125,19 +127,16 @@ def main():
         'Front Note': list(df_filtered['Front Note']),
         'Add Reverse': list(df_filtered['Add Reverse'])
         }
-    
     ntags = [row.split() for row in df_filtered['Tags']]
-
     added_notes_nid = notes_df.add_notes(
         nmodel='Cantonese Sentences (optional reversed card)',
         nflds=notes_fld,
         ntags=ntags,
         inplace=True
         )
-    
-
     col.write(add=True,modify=True)
     
+
     col = Collection(ANKI_LOCATION)
     
     #Find newly added notes and add to database
@@ -152,9 +151,9 @@ def main():
     col.summarize_changes()
     col.write(add=True,modify=True)
 
+    #Update exclude column with time card is was added
     current_time = datetime.datetime.now()
     time_string = current_time.strftime("%Y-%m-%d %H:%M:%S")
-
     for i in filtered_index:
         worksheet.update_cell(i+2,1,time_string)
 
