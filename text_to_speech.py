@@ -1,5 +1,3 @@
-import os
-import re
 from gtts import gTTS
 from google.cloud import texttospeech
 from google.oauth2 import service_account
@@ -7,6 +5,14 @@ from google.oauth2 import service_account
 credentials = service_account.Credentials.from_service_account_file('google_auth.json')
 
 def generate_cantonese(cantonese, filename, voice_speed=1.0):
+    """
+    Generate Cantonese sound clip from text.
+
+    Args:
+        cantonese (str): Cantonese characters
+        filename (str): filepath where audio file is generated
+        voice_speed(float): Speed of audio file
+    """
     cantonese = cantonese.replace('?','')
 
     # Instantiates a client
@@ -39,11 +45,19 @@ def generate_cantonese(cantonese, filename, voice_speed=1.0):
 
 
 def generate_english(english, filename):
+    """
+    Generate English sound clip from text.
+
+    Args:
+        english (str): Cantonese characters
+        filename (str): filepath where audio file is generated
+    """
     tts = gTTS(english, lang='en', tld='us')
     tts.save(filename)
 
 
 if __name__ == '__main__':
+    #for testing
     import json
     with open("tts_test_inputs.json", "r",encoding='utf-8') as readfile:
         inputs = json.load(readfile)
