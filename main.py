@@ -11,6 +11,10 @@ import click
 from dotenv import load_dotenv
 
 load_dotenv()
+ANKI_MEDIA_LOCATION = os.environ.get('ANKI_MEDIA_LOCATION')
+ANKI_LOCATION = os.environ.get('ANKI_LOCATION')
+GOOGLE_SHEET_KEY = os.environ.get('GOOGLE_SHEET_KEY')
+
 
 def check_and_create_directory(path):
     """Checks if a file directory exists and creates it if it does not.
@@ -55,11 +59,11 @@ def sentence_to_filename(sentence):
     return filename
 
 def main():
-    anki_media_folder_location = os.environ.get('ANKI_DB_LOCATION')
+    anki_media_folder_location = ANKI_MEDIA_LOCATION
 
     # Open the Google Sheet
     gc = gspread.service_account(Path('google_auth.json'))
-    sheet = gc.open_by_key(os.environ.get('GOOGLE_SHEET_KEY'))          #google sheet must be public to view and edit
+    sheet = gc.open_by_key(GOOGLE_SHEET_KEY)          #google sheet must be public to view and edit
 
     if anki_media_folder_location is None:
         return
@@ -105,7 +109,7 @@ def main():
     list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), ch_path))
     list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), chs_path, [0.5]*len(en_path)))
 
-    col = Collection('C:/Users/ttrol/AppData/Roaming/Anki2')
+    col = Collection(ANKI_LOCATION)
 
     notes_df = col.notes
 
@@ -131,6 +135,18 @@ def main():
         )
     
     col.write(add=True,modify=True)
+    
+    col = Collection(ANKI_LOCATION)
+    
+    #Find newly added notes and add to database
+    cards = col.cards
+
+    #Only adds cards if notes were added. 
+    if isinstance(added_notes_nid, list) and all(isinstance(item, int) for item in added_notes_nid):
+        cards.add_cards(nid=added_notes_nid, cdeck='Cantonese Sentences')
+
+    col.summarize_changes()
+    col.write(add=True,modify=True)
 
     current_time = datetime.datetime.now()
     time_string = current_time.strftime("%Y-%m-%d %H:%M:%S")
@@ -138,8 +154,29 @@ def main():
     for i in filtered_index:
         worksheet.update_cell(i+2,1,time_string)
 
+def validate_setup():
+    """
+    This function validates if authentication and environment is correctly setup.
+    """
+    error = False
+    if ANKI_LOCATION is None:
+        print("Missing 'ANKI_LOCATION' env variable")
+        error = True
+    if ANKI_MEDIA_LOCATION is None:
+        print("Missing 'ANKI_MEDIA_LOCATION' env variable")
+        error = True
+    if GOOGLE_SHEET_KEY is None:
+        print("Missing 'GOOGLE_SHEET_KEY' env variable")
+        error = True
+    if os.path.exists('google_auth.json'):
+        print("Missing 'google_auth.json' file in root of project")
+        error = True
 
+    if error:
+        raise FileNotFoundError
+    
 if __name__ == '__main__':
+   validate_setup()
    main()
     
 
