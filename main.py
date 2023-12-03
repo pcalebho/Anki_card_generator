@@ -134,6 +134,7 @@ def main():
         inplace=True
         )
     
+
     col.write(add=True,modify=True)
     
     col = Collection(ANKI_LOCATION)
@@ -143,7 +144,9 @@ def main():
 
     #Only adds cards if notes were added. 
     if isinstance(added_notes_nid, list) and all(isinstance(item, int) for item in added_notes_nid):
-        cards.add_cards(nid=added_notes_nid, cdeck='Cantonese Sentences')
+        #cord is the template value
+        added_cards = cards.add_cards(nid=added_notes_nid, cdeck='Cantonese Sentences', inplace=True, cord=0)
+
 
     col.summarize_changes()
     col.write(add=True,modify=True)
@@ -168,7 +171,7 @@ def validate_setup():
     if GOOGLE_SHEET_KEY is None:
         print("Missing 'GOOGLE_SHEET_KEY' env variable")
         error = True
-    if os.path.exists('google_auth.json'):
+    if not os.path.exists('google_auth.json'):
         print("Missing 'google_auth.json' file in root of project")
         error = True
 
