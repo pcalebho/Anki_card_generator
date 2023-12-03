@@ -17,7 +17,8 @@ GOOGLE_SHEET_KEY = os.environ.get('GOOGLE_SHEET_KEY')
 
 
 def check_and_create_directory(path):
-    """Checks if a file directory exists and creates it if it does not.
+    """
+    Checks if a file directory exists and creates it if it does not.
 
     Args:
         path: The path to the directory to check.
@@ -30,6 +31,9 @@ def check_and_create_directory(path):
         os.makedirs(path)
 
 def filename_to_anki(filename):
+    """
+    Creates audio filename for anki syntax
+    """
     result = f"[sound:{filename}]"
     return result
 
@@ -64,9 +68,6 @@ def main():
     # Open the Google Sheet
     gc = gspread.service_account(Path('google_auth.json'))
     sheet = gc.open_by_key(GOOGLE_SHEET_KEY)          #google sheet must be public to view and edit
-
-    if anki_media_folder_location is None:
-        return
 
     # Get the worksheet
     worksheet = sheet.worksheet('Sheet1')
