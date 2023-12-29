@@ -1,0 +1,21 @@
+INFO: Database found at 'C:\\Users\\ttrol\\AppData\\Roaming\\Anki2\\User 1\\collection.anki2'.
+CRITICAL: The following IDs occur more than once: 1695598073179. Please do not use this dataframe.
+CRITICAL: Duplicated indizes in table notes discovered, so something definitely went wrong. Please don't ignore this warning. These indizes appear more than once: 1695598073179
+CRITICAL: Duplicated indizes in table notes discovered, so something definitely went wrong. Please don't ignore this warning. These indizes appear more than once: 1695598073179
+INFO: Backup created at C:\Users\ttrol\AppData\Roaming\Anki2\User 1\backups\backup-ankipandas-2023-12-28-21.02.27.494665.anki2
+WARNING: Currently AnkiPandas might not be able to tell Anki to sync its database. You might have to manually tell Anki to sync everything to AnkiDroid.
+Furthermore, if you run into issues with tag searches not workinganymore, please first do Notes > Clear unused notes and then Tools > Check Database (from the main menu). This should get them to work (sorry about this issue).
+INFO: In case you're running this from a Jupyter notebook, make sure to shutdown the kernel or delete all ankipandas objects before you open anki to take a look at the result (only one application can use the database at a time).
+CRITICAL: The following IDs occur more than once: 1702401524535, 1702401524560, 1702401524618, 1702401524628, 1702401524664, 1702401635200, 1701176524830, 1700352930050, 1700352930050, 1700710909225, 1701176524828, 1700710909225. Please do not use this dataframe.
+CRITICAL: Duplicated indizes in table cards discovered, so something definitely went wrong. Please don't ignore this warning. These indizes appear more than once: 1702401524535, 1702401524560, 1702401524618, 1702401524628, 1702401524664, 1702401635200, 1701176524830, 1700352930050, 1700352930050, 1700710909225, 1701176524828, 1700710909225
+======== cards ========
+Total rows: 4608
+Compared to original version:
+Modified rows: 0
+Added rows: 12
+Deleted rows: 0
+CRITICAL: Duplicated indizes in table cards discovered, so something definitely went wrong. Please don't ignore this warning. These indizes appear more than once: 1702401524535, 1702401524560, 1702401524618, 1702401524628, 1702401524664, 1702401635200, 1701176524830, 1700352930050, 1700352930050, 1700710909225, 1701176524828, 1700710909225
+INFO: Backup created at C:\Users\ttrol\AppData\Roaming\Anki2\User 1\backups\backup-ankipandas-2023-12-28-21.02.27.726241.anki2
+WARNING: Currently AnkiPandas might not be able to tell Anki to sync its database. You might have to manually tell Anki to sync everything to AnkiDroid.
+Furthermore, if you run into issues with tag searches not workinganymore, please first do Notes > Clear unused notes and then Tools > Check Database (from the main menu). This should get them to work (sorry about this issue).
+INFO: In case you're running this from a Jupyter notebook, make sure to shutdown the kernel or delete all ankipandas objects before you open anki to take a look at the result (only one application can use the database at a time).

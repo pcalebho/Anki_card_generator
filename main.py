@@ -178,8 +178,14 @@ def validate_setup():
         raise FileNotFoundError
     
 if __name__ == '__main__':
-   validate_setup()
-   main()
+    validate_setup()
+    
+    try:
+        main()
+    except Exception: 
+        print("Error Running")
+
+    input('Enter to continue: ')
     
 
     
