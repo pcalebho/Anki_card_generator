@@ -62,7 +62,7 @@ def sentence_to_filename(sentence):
 
     return filename
 
-def main():
+def main(add_to_deck = True):
     anki_media_folder_location = ANKI_MEDIA_LOCATION
 
     # Open the Google Sheet
@@ -135,20 +135,19 @@ def main():
         )
     col.write(add=True,modify=True)
     
+    if add_to_deck:
+        col = Collection(ANKI_LOCATION)
+        
+        #Find newly added notes and add to database
+        cards = col.cards
 
-    col = Collection(ANKI_LOCATION)
-    
-    #Find newly added notes and add to database
-    cards = col.cards
+        #Only adds cards if notes were added. 
+        if isinstance(added_notes_nid, list) and all(isinstance(item, int) for item in added_notes_nid):
+            #cord is the template value
+            added_cards = cards.add_cards(nid=added_notes_nid, cdeck='Cantonese Sentences', inplace=True, cord=0)
 
-    #Only adds cards if notes were added. 
-    if isinstance(added_notes_nid, list) and all(isinstance(item, int) for item in added_notes_nid):
-        #cord is the template value
-        added_cards = cards.add_cards(nid=added_notes_nid, cdeck='Cantonese Sentences', inplace=True, cord=0)
-
-
-    col.summarize_changes()
-    col.write(add=True,modify=True)
+        col.summarize_changes()
+        col.write(add=True,modify=True)
 
     #Update exclude column with time card is was added
     current_time = datetime.datetime.now()
@@ -181,7 +180,7 @@ if __name__ == '__main__':
     validate_setup()
     
     try:
-        main()
+        main(False)
     except Exception: 
         print("Error Running")
 
