@@ -55,10 +55,14 @@ def generate_english(english, filename):
     tts = gTTS(english, lang='en', tld='us')
     tts.save(filename)
 
-
-if __name__ == '__main__':
+def testing():
     #for testing
     import json
+    import os
+
+    if not os.path.exissts("tts_test_inputs.json"):
+        return
+
     with open("tts_test_inputs.json", "r",encoding='utf-8') as readfile:
         inputs = json.load(readfile)
 
@@ -68,3 +72,7 @@ if __name__ == '__main__':
     generate_cantonese(yue,'build/ch_normal.mp3', voice_speed=1)
     generate_cantonese(yue,'build/ch_slow.mp3', voice_speed=0.5)
     generate_english(en, 'build/en.mp3')
+
+
+if __name__ == '__main__':
+    testing()
