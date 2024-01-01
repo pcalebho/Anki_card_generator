@@ -60,7 +60,7 @@ def testing():
     import json
     import os
 
-    if not os.path.exissts("tts_test_inputs.json"):
+    if not os.path.exists("tts_test_inputs.json"):
         return
 
     with open("tts_test_inputs.json", "r",encoding='utf-8') as readfile:
