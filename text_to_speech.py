@@ -4,25 +4,25 @@ from google.oauth2 import service_account
 
 credentials = service_account.Credentials.from_service_account_file('google_auth.json')
 
-def generate_cantonese(cantonese, filename, voice_speed=1.0):
+def gen_target_audio(target_lang_text, filename, lang_code, voice_speed=1.0):
     """
     Generate Cantonese sound clip from text.
 
     Args:
-        cantonese (str): Cantonese characters
+        target_lang_text (str): text of your target language
+        lang_code (str): TTS language code from Google Cloud. Decides what language the synthesizer will speak.
         filename (str): filepath where audio file is generated
         voice_speed(float): Speed of audio file
     """
-    cantonese = cantonese.replace('?','')
 
     # Instantiates a client
     client = texttospeech.TextToSpeechClient(credentials=credentials)
 
     # Set the text input to be synthesized
-    synthesis_input = texttospeech.SynthesisInput(text=cantonese)
+    synthesis_input = texttospeech.SynthesisInput(text=target_lang_text)
 
     voice = texttospeech.VoiceSelectionParams(
-        language_code="yue-HK", ssml_gender=texttospeech.SsmlVoiceGender.FEMALE
+        language_code=lang_code, ssml_gender=texttospeech.SsmlVoiceGender.FEMALE
     )
 
     # Select the type of audio file you want returned
@@ -69,8 +69,8 @@ def testing():
     yue = inputs['yue']
     en = inputs['en']
 
-    generate_cantonese(yue,'build/ch_normal.mp3', voice_speed=1)
-    generate_cantonese(yue,'build/ch_slow.mp3', voice_speed=0.5)
+    gen_target_audio(yue,'build/ch_normal.mp3', "yue-HK", voice_speed=1)
+    gen_target_audio(yue,'build/ch_slow.mp3', "yue-HK", voice_speed=0.5)
     generate_english(en, 'build/en.mp3')
 
 

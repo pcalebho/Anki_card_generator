@@ -3,7 +3,7 @@ import os
 import shutil
 import pandas as pd
 from pathlib import Path
-from text_to_speech import generate_english, generate_cantonese
+from text_to_speech import generate_english, gen_target_audio
 from ankipandas import Collection
 import re
 import datetime
@@ -62,7 +62,7 @@ def sentence_to_filename(sentence):
 
     return filename
 
-def main(add_to_deck = True):
+def main(cdeck, target_lang_code, add_to_deck = True):
     anki_media_folder_location = ANKI_MEDIA_LOCATION
 
     # Open the Google Sheet
@@ -80,11 +80,11 @@ def main(add_to_deck = True):
 
     df = pd.DataFrame(values[1:])
     df.columns= values[0]
-    df_filtered = df[df['Cantonese Phrase'] != '']
-    df_filtered = df_filtered[df_filtered['English Phrase'] != '']
-    df_filtered = df_filtered[df_filtered['Jyutping'] != '']
-    df_filtered = df_filtered[df_filtered['Exclude'] == '']
-    df_filtered['Cantonese Phrase'] = [" ".join(phrase.split()) for phrase in df_filtered['Cantonese Phrase']] 
+    df_filtered = df[df['Target Phrase'] != '']
+    df_filtered = df_filtered[df_filtered['Native Phrase'] != '']
+    df_filtered = df_filtered[df_filtered['Romanization'] != '']
+    df_filtered = df_filtered[df_filtered['Time Added'] == '']
+    df_filtered['Target Phrase'] = [" ".join(phrase.split()) for phrase in df_filtered['Target Phrase']] 
 
     filtered_index = list(df_filtered.index.values)
 
@@ -99,36 +99,37 @@ def main(add_to_deck = True):
         return
     
     #Create filepaths 
-    en_filenames = [sentence_to_filename(phrase)+'-en.mp3' for phrase in list(df_filtered['English Phrase'])]
-    ch_filenames =  [sentence_to_filename(phrase) + '-ch.mp3' for phrase in list(df_filtered['Jyutping'])]
-    chs_filenames =  [sentence_to_filename(phrase) + '-chs.mp3' for phrase in list(df_filtered['Jyutping'])]
+    en_filenames = [sentence_to_filename(phrase)+'-nat.mp3' for phrase in list(df_filtered['Native Phrase'])]
+    ch_filenames =  [sentence_to_filename(phrase) + '-tar.mp3' for phrase in list(df_filtered['Romanization'])]
+    chs_filenames =  [sentence_to_filename(phrase) + '-tars.mp3' for phrase in list(df_filtered['Romanization'])]
     en_path = [anki_media_folder_location +'/' + f for f in en_filenames]
     ch_path = [anki_media_folder_location +'/' + f for f in ch_filenames]
     chs_path = [anki_media_folder_location +'/' + f for f in chs_filenames]
+    lang_code_list = [target_lang_code]*len(ch_path)
 
 
     #create audio files
-    list(map(generate_english, list(df_filtered['English Phrase']), en_path))
-    list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), ch_path))
-    list(map(generate_cantonese, list(df_filtered['Cantonese Phrase']), chs_path, [0.5]*len(en_path)))
+    list(map(generate_english, list(df_filtered['Native Language Phrase']), en_path))
+    list(map(gen_target_audio, list(df_filtered['Target Language Phrase']), lang_code_list, ch_path))
+    list(map(gen_target_audio, list(df_filtered['Target Language Phrase']), lang_code_list, [0.5]*len(en_path)))
 
     #Add notes to Anki collection
     col = Collection(ANKI_LOCATION)
     notes_df = col.notes
     notes_fld = {
-        'English': list(df_filtered['English Phrase']),
-        'English Audio': list(map(filename_to_anki,en_filenames)),
-        'Cantonese': list(df_filtered['Cantonese Phrase']),
-        'Cantonese Audio': list(map(filename_to_anki,ch_filenames)),
-        'Cantonese Audio Slow': list(map(filename_to_anki,chs_filenames)),
-        'Jyutping': list(df_filtered['Jyutping']),
-        'Notes': list(df_filtered['Notes']),
+        'Native Phrase': list(df_filtered['English Phrase']),
+        'Native Audio': list(map(filename_to_anki,en_filenames)),
+        'Target Phrase': list(df_filtered['Cantonese Phrase']),
+        'Target Audio': list(map(filename_to_anki,ch_filenames)),
+        'Target Audio Slow': list(map(filename_to_anki,chs_filenames)),
+        'Romanization': list(df_filtered['Jyutping']),
+        'Back Note': list(df_filtered['Notes']),
         'Front Note': list(df_filtered['Front Note']),
         'Add Reverse': list(df_filtered['Add Reverse'])
         }
     ntags = [row.split() for row in df_filtered['Tags']]
     added_notes_nid = notes_df.add_notes(
-        nmodel='Cantonese Sentences (optional reversed card)',
+        nmodel='Python Generated',
         nflds=notes_fld,
         ntags=ntags,
         inplace=True
@@ -144,7 +145,7 @@ def main(add_to_deck = True):
         #Only adds cards if notes were added. 
         if isinstance(added_notes_nid, list) and all(isinstance(item, int) for item in added_notes_nid):
             #cord is the template value
-            added_cards = cards.add_cards(nid=added_notes_nid, cdeck='Cantonese Sentences', inplace=True, cord=0)
+            added_cards = cards.add_cards(nid=added_notes_nid, cdeck=cdeck, inplace=True, cord=0)
 
         col.summarize_changes()
         col.write(add=True,modify=True)
@@ -180,7 +181,7 @@ if __name__ == '__main__':
     validate_setup()
     
     try:
-        main(False)
+        main("Cantonese Sentences", "yue-HK", False)
     except Exception: 
         print("Error Running")
 
