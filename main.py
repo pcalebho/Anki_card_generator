@@ -7,6 +7,7 @@ from text_to_speech import generate_english, gen_target_audio
 from ankipandas import Collection
 import re
 import datetime
+import traceback
 import click
 from dotenv import load_dotenv
 
@@ -182,8 +183,13 @@ if __name__ == '__main__':
     
     try:
         main("Cantonese Sentences", "yue-HK", False)
-    except Exception: 
-        print("Error Running")
+    except Exception, err:
+        try:
+            raise TypeError("Again !?!")
+        except:
+            pass
+
+        traceback.print_exc()
 
     input('Enter to continue: ')
     
