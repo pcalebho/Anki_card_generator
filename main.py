@@ -109,21 +109,21 @@ def main(cdeck, target_lang_code, add_to_deck = True):
 
 
     #create audio files
-    list(map(generate_english, list(df_filtered['Native Language Phrase']), en_path))
-    list(map(gen_target_audio, list(df_filtered['Target Language Phrase']), lang_code_list, ch_path))
-    list(map(gen_target_audio, list(df_filtered['Target Language Phrase']), lang_code_list, [0.5]*len(en_path)))
+    list(map(generate_english, list(df_filtered['Native Phrase']), en_path))
+    list(map(gen_target_audio, list(df_filtered['Target Phrase']), ch_path, lang_code_list))
+    list(map(gen_target_audio, list(df_filtered['Target Phrase']), chs_path, lang_code_list, [0.5]*len(en_path)))
 
     #Add notes to Anki collection
     col = Collection(ANKI_LOCATION)
     notes_df = col.notes
     notes_fld = {
-        'Native Phrase': list(df_filtered['English Phrase']),
+        'Native Phrase': list(df_filtered['Native Phrase']),
         'Native Audio': list(map(filename_to_anki,en_filenames)),
-        'Target Phrase': list(df_filtered['Cantonese Phrase']),
+        'Target Phrase': list(df_filtered['Target Phrase']),
         'Target Audio': list(map(filename_to_anki,ch_filenames)),
         'Target Audio Slow': list(map(filename_to_anki,chs_filenames)),
-        'Romanization': list(df_filtered['Jyutping']),
-        'Back Note': list(df_filtered['Notes']),
+        'Romanization': list(df_filtered['Romanization']),
+        'Back Note': list(df_filtered['Back Note']),
         'Front Note': list(df_filtered['Front Note']),
         'Add Reverse': list(df_filtered['Add Reverse'])
         }
