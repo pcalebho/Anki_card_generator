@@ -183,7 +183,7 @@ if __name__ == '__main__':
     
     try:
         main("Cantonese Sentences", "yue-HK", False)
-    except Exception, err:
+    except Exception as err:
         try:
             raise TypeError("Again !?!")
         except:
